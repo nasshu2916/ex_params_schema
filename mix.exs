@@ -6,7 +6,7 @@ defmodule ExParamsSchema.MixProject do
   def project do
     [
       app: :ex_params_schema,
-      version: "0.1.0",
+      version: "0.1.1",
       description: "LiveView イベントパラメーターを型付き構造体へ変換するライブラリ",
       elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
