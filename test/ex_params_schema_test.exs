@@ -189,7 +189,9 @@ defmodule ExParamsSchemaTest do
                 title: {:string, optional: true, default: "untitled"},
                 rank: {:integer, nullable: true}
               }
-            ], optional: true, error: :invalid_entries
+            ],
+            optional: true,
+            error: :invalid_entries
 
       field :status, :string, source: "input-status", error: :invalid_status
     end
