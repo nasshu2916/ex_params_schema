@@ -1,0 +1,139 @@
+defmodule ExParamsSchema.Schema.JsonPointer do
+  @moduledoc """
+  JSON Pointer とフィールドパスを変換・照合する純粋関数を提供します。
+
+  JSON Schema の検証エラーは JSON Pointer、アプリケーション側は文字列キーと list 添字から
+  なるパスを使うため、このモジュールで変換規則を一元化します。
+  """
+
+  @type segment :: String.t()
+  @type resolved_segment :: String.t() | non_neg_integer()
+  @type pattern_segment :: String.t() | :index
+  @type pattern :: [pattern_segment()]
+  @type pointer_path :: [segment()]
+  @type resolved_path :: [resolved_segment()]
+
+  @doc """
+  JSON Pointer を未解決のセグメント列へ変換します。
+
+      iex> ExParamsSchema.Schema.JsonPointer.decode("#/a~1b~0c/0")
+      {:ok, ["a/b~c", "0"]}
+  """
+  @spec decode(String.t()) :: {:ok, pointer_path()} | :error
+  def decode("#"), do: {:ok, []}
+
+  def decode("#/" <> pointer) do
+    pointer
+    |> String.split("/", trim: false)
+    |> Enum.map(&unescape_segment/1)
+    |> then(&{:ok, &1})
+  end
+
+  def decode(_pointer), do: :error
+
+  @doc """
+  JSON Pointer を文字列キーと list 添字のパスへ変換します。
+
+      iex> ExParamsSchema.Schema.JsonPointer.parse("#/entries/0/value")
+      ["entries", 0, "value"]
+
+  `#` はルートを表します。不正な Pointer は空のパスとして扱います。
+  """
+  @spec parse(String.t()) :: resolved_path()
+  def parse(pointer) do
+    case decode(pointer) do
+      {:ok, path} -> resolve_segments(path)
+      :error -> []
+    end
+  end
+
+  @doc """
+  JSON Pointer のパスを、list の添字を整数へ変換したパスにします。
+  """
+  @spec resolve_segments(pointer_path()) :: resolved_path()
+  def resolve_segments(path), do: Enum.map(path, &resolve_segment/1)
+
+  @doc """
+  定義パターンがパスの先頭に一致するとき、解決後のパスを返します。
+
+  `:index` は 0 以上の整数のセグメントにのみ一致します。
+  """
+  @spec match(pattern(), pointer_path()) :: {:ok, resolved_path()} | :error
+  def match(pattern, path) do
+    case resolve_pattern(pattern, path) do
+      {:ok, resolved, trailing} -> {:ok, resolved ++ resolve_segments(trailing)}
+      _other -> :error
+    end
+  end
+
+  @doc """
+  JSON Pointer のセグメントを RFC 6901 の形式へエスケープします。
+  """
+  @spec escape_segment(String.t()) :: String.t()
+  def escape_segment(segment) when is_binary(segment) do
+    segment |> String.replace("~", "~0") |> String.replace("/", "~1")
+  end
+
+  @spec resolve_pattern(pattern(), pointer_path()) ::
+          {:ok, resolved_path(), pointer_path()} | :error
+  defp resolve_pattern(pattern, path), do: resolve_pattern(pattern, path, [])
+
+  @spec resolve_pattern(pattern(), pointer_path(), resolved_path()) ::
+          {:ok, resolved_path(), pointer_path()} | :error
+  defp resolve_pattern([], path, resolved), do: {:ok, Enum.reverse(resolved), path}
+
+  defp resolve_pattern([:index | pattern], [segment | path], resolved) do
+    case index_segment(segment) do
+      {:ok, index} -> resolve_pattern(pattern, path, [index | resolved])
+      :error -> :error
+    end
+  end
+
+  defp resolve_pattern([:index | _pattern], [], _resolved), do: :error
+
+  defp resolve_pattern([segment | pattern], path, resolved) do
+    case consume_segment(segment, path) do
+      {:ok, remaining} -> resolve_pattern(pattern, remaining, [segment | resolved])
+      :error -> :error
+    end
+  end
+
+  defp resolve_pattern(_pattern, _path, _resolved), do: :error
+  @spec consume_segment(segment(), pointer_path()) :: {:ok, pointer_path()} | :error
+  defp consume_segment(expected, [actual | path]) when expected == actual, do: {:ok, path}
+
+  defp consume_segment(segment, path) do
+    raw_segments = String.split(segment, "/")
+
+    if length(raw_segments) > 1 and Enum.take(path, length(raw_segments)) == raw_segments do
+      {:ok, Enum.drop(path, length(raw_segments))}
+    else
+      :error
+    end
+  end
+
+  @spec resolve_segment(segment()) :: resolved_segment()
+  defp resolve_segment(segment) do
+    case index_segment(segment) do
+      {:ok, index} -> index
+      :error -> segment
+    end
+  end
+
+  @spec index_segment(segment()) :: {:ok, non_neg_integer()} | :error
+  defp index_segment("0"), do: {:ok, 0}
+
+  defp index_segment(<<first, _rest::binary>> = segment) when first in ?1..?9 do
+    case Integer.parse(segment) do
+      {index, ""} -> {:ok, index}
+      _other -> :error
+    end
+  end
+
+  defp index_segment(_segment), do: :error
+
+  @spec unescape_segment(segment()) :: segment()
+  defp unescape_segment(segment) do
+    segment |> String.replace("~1", "/") |> String.replace("~0", "~")
+  end
+end

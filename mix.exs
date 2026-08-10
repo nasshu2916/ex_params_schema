@@ -1,0 +1,61 @@
+defmodule ExParamsSchema.MixProject do
+  use Mix.Project
+
+  @source_url "https://github.com/nasshu2916/ex_params_schema"
+
+  def project do
+    [
+      app: :ex_params_schema,
+      version: "0.1.0",
+      description: "LiveView イベントパラメーターを型付き構造体へ変換するライブラリ",
+      elixir: "~> 1.14",
+      start_permanent: Mix.env() == :prod,
+      test_coverage: [summary: [threshold: 90]],
+      package: package(),
+      source_url: @source_url,
+      homepage_url: @source_url,
+      docs: docs(),
+      deps: deps()
+    ]
+  end
+
+  def application do
+    [
+      extra_applications: [:logger]
+    ]
+  end
+
+  defp deps do
+    [
+      {:ex_json_schema, "~> 0.11.4"},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.40.3", only: :dev, runtime: false, warn_if_outdated: true}
+    ]
+  end
+
+  defp package do
+    [
+      licenses: ["MIT"],
+      links: %{"GitHub" => @source_url},
+      files: ["lib", "mix.exs", "README.md", "README_ja.md", "CHANGELOG.md", "LICENSE", "docs"]
+    ]
+  end
+
+  defp docs do
+    [
+      main: "readme",
+      extras: [
+        {"README.md", title: "ExParamsSchema", filename: "readme"},
+        "CHANGELOG.md",
+        "docs/dsl.md",
+        "docs/json-schema-usage.md",
+        "docs/parsing-semantics.md",
+        {"README_ja.md", title: "ExParamsSchema (日本語)", filename: "readme_ja"},
+        {"docs/dsl_ja.md", title: "DSL リファレンス", filename: "dsl_ja"},
+        {"docs/json-schema-usage_ja.md", title: "`json_schema:` の使い方", filename: "json-schema-usage_ja"},
+        {"docs/parsing-semantics_ja.md", title: "パースの仕様", filename: "parsing-semantics_ja"}
+      ]
+    ]
+  end
+end

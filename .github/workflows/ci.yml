@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Quality checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: erlef/setup-beam@v1
+        with:
+          elixir-version: "1.20.2"
+          otp-version: "29.0.3"
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            _build
+            priv/plts
+          key: ${{ runner.os }}-mix-${{ hashFiles('mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
+
+      - run: mix deps.get
+      - run: mix format --check-formatted
+      - run: mix credo --strict
+      - run: mix compile --warnings-as-errors
+      - run: mix dialyzer
+      - run: mix test --cover --warnings-as-errors
+      - run: mix xref graph --format cycles
+      - run: mix docs

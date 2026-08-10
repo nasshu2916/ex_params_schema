@@ -1,0 +1,20 @@
+[tools]
+elixir = "1.20.2-otp-29"
+erlang = "29.0.3"
+
+[tasks.dev]
+description = "Start the development iex shell with history enabled"
+run = [
+  "iex --erl \"-kernel shell_history enabled\" -S mix"
+]
+
+[tasks.ci]
+description = "Format, lint, type-check, and run coverage tests"
+run = [
+  "mix format",
+  "mix credo --strict",
+  "mix compile --warnings-as-errors",
+  "mix dialyzer",
+  "mix test --cover --warnings-as-errors",
+  "mix docs"
+]
