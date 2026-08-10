@@ -8,7 +8,7 @@ defmodule ExParamsSchema.MixProject do
       app: :ex_params_schema,
       version: "0.1.0",
       description: "LiveView イベントパラメーターを型付き構造体へ変換するライブラリ",
-      elixir: "~> 1.14",
+      elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
       test_coverage: [summary: [threshold: 90]],
       package: package(),
