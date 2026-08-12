@@ -19,7 +19,7 @@ Add the dependency to `mix.exs` and fetch it:
 ```elixir
 def deps do
   [
-    {:ex_params_schema, "~> 0.1.0"}
+    {:ex_params_schema, "~> 0.1.1"}
   ]
 end
 ```
