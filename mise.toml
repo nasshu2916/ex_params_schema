@@ -11,11 +11,32 @@ run = [
 
 [tasks.ci]
 description = "Format, lint, type-check, and run coverage tests"
-run = [
-  "mix format",
-  "mix credo --strict",
-  "mix compile --warnings-as-errors",
-  "mix dialyzer",
-  "mix test --cover --warnings-as-errors",
-  "mix docs"
-]
+depends = ["ci:format", "ci:credo", "ci:dialyzer", "ci:test", "ci:docs"]
+
+[tasks."ci:format"]
+hide = true
+run = "mix format"
+
+[tasks."ci:compile"]
+hide = true
+run = "mix compile --warnings-as-errors"
+
+[tasks."ci:credo"]
+hide = true
+depends = ["ci:compile"]
+run = "mix credo --strict"
+
+[tasks."ci:dialyzer"]
+hide = true
+depends = ["ci:compile"]
+run = "mix dialyzer"
+
+[tasks."ci:test"]
+hide = true
+depends = ["ci:compile"]
+run = "mix test --cover --warnings-as-errors"
+
+[tasks."ci:docs"]
+hide = true
+depends = ["ci:compile"]
+run = "mix docs"
