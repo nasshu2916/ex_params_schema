@@ -1,9 +1,9 @@
 defmodule ExParamsSchema.Schema.JsonPointer do
   @moduledoc """
-  JSON Pointer とフィールドパスを変換・照合する純粋関数を提供します。
+  Provides pure functions for converting and matching JSON Pointers and field paths.
 
-  JSON Schema の検証エラーは JSON Pointer、アプリケーション側は文字列キーと list 添字から
-  なるパスを使うため、このモジュールで変換規則を一元化します。
+  JSON Schema validation errors use JSON Pointers, while the application uses paths made of
+  string keys and list indexes. This module centralizes the conversion rules.
   """
 
   @type segment :: String.t()

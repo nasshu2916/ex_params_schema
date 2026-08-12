@@ -1,8 +1,9 @@
 defmodule ExParamsSchema.Compiler do
   @moduledoc """
-  `use ExParamsSchema` で宣言されたフィールドから、構造体と関連関数をコンパイル時に生成します。
+  Generates structs and related functions at compile time from fields declared with
+  `use ExParamsSchema`.
 
-  マクロ展開を支える内部モジュールです。通常は直接呼び出しません。
+  This internal module supports macro expansion and is not normally called directly.
   """
 
   alias ExParamsSchema.Definition.{Field, Typespec}

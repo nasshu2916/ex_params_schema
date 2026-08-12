@@ -1,8 +1,8 @@
 defmodule ExParamsSchema.Definition.Field do
   @moduledoc """
-  正規化済みのフィールド定義を表す内部構造体です。
+  An internal struct that represents a normalized field definition.
 
-  入力キー、任意性、エラー理由のようなフィールド単位の共通規則を提供します。
+  It provides field-level common rules such as input keys, optionality, and error reasons.
   """
 
   @enforce_keys [:name, :type]

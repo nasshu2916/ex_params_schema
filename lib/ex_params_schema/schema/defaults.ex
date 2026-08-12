@@ -1,8 +1,8 @@
 defmodule ExParamsSchema.Schema.Defaults do
   @moduledoc """
-  フィールドの既定値をキャストし、生成した JSON Schema に対して検証します。
+  Casts field defaults and validates them against the generated JSON Schema.
 
-  スキーマのコンパイル時に使用する内部モジュールです。
+  This internal module is used while compiling schemas.
   """
 
   alias ExParamsSchema.Definition.Field

@@ -1,11 +1,10 @@
 defmodule ExParamsSchema do
   @moduledoc """
-  LiveView、Phoenix Controller、JSON API などで受け取る文字列中心の params を検証し、
-  型付き構造体へ変換するための DSL です。
+  A DSL for validating string-heavy params received by LiveViews, Phoenix controllers, JSON APIs,
+  and similar sources, and casting them into typed structs.
 
-  `use ExParamsSchema` を指定したモジュールで `defschema/1`・`defschema/2` のブロック内に
-  `field/2`・`field/3` を
-  使うと、構造体、`t/0`、`parse/1` が生成されます。
+  In a module that uses `ExParamsSchema`, declaring `field/2` or `field/3` inside a `defschema/1`
+  or `defschema/2` block generates a struct, `t/0`, and `parse/1`.
 
       defmodule ExampleParams do
         use ExParamsSchema
@@ -19,9 +18,9 @@ defmodule ExParamsSchema do
       ExampleParams.parse(%{"id" => "1", "value" => "128"})
       #=> {:ok, %ExampleParams{id: 1, value: 128}}
 
-  `:boolean`、`:date`、`:datetime`、`:integer`、`:float`、`:number`、`:string`、`:null`、`:any`、atom enum、
-  map、list を組み合わせられます。文字列は型変換してから JSON Schema Draft 7 による標準制約の
-  検証を行います。詳細は README と `docs/` を参照してください。
+  Combine `:boolean`, `:date`, `:datetime`, `:integer`, `:float`, `:number`, `:string`, `:null`,
+  `:any`, atom enums, maps, and lists. Strings are cast before standard constraints are validated
+  with JSON Schema Draft 7. See the README and `docs/` for details.
   """
 
   alias ExParamsSchema.{Compiler, Definition, Schema}

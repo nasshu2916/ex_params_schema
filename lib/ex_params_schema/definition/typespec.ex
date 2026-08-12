@@ -1,8 +1,8 @@
 defmodule ExParamsSchema.Definition.Typespec do
   @moduledoc """
-  正規化済みフィールドから、生成する構造体の型仕様 AST を組み立てます。
+  Builds the typespec AST for generated structs from normalized fields.
 
-  `ExParamsSchema.Compiler` がコンパイル時に使用する内部モジュールです。
+  This internal module is used by `ExParamsSchema.Compiler` at compile time.
   """
 
   alias ExParamsSchema.Definition.Field

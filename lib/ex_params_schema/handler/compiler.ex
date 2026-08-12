@@ -1,8 +1,8 @@
 defmodule ExParamsSchema.Handler.Compiler do
   @moduledoc """
-  `ExParamsSchema.Handler` の注釈を callback 実装へ展開します。
+  Expands `ExParamsSchema.Handler` annotations into callback implementations.
 
-  LiveView callback の書き換えを担うコンパイル時専用の内部モジュールです。
+  This internal compile-time-only module rewrites LiveView callbacks.
   """
 
   alias ExParamsSchema.Handler.Compiler.Clause

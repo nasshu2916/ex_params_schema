@@ -1,8 +1,9 @@
 defmodule ExParamsSchema.Schema.Options do
   @moduledoc """
-  schema-level option の既定値と正規化規則を管理します。
+  Manages default values and normalization rules for schema-level options.
 
-  `use ExParamsSchema`、`defschema`、map 形式のschema定義で共有する内部モジュールです。
+  This internal module is shared by `use ExParamsSchema`, `defschema`, and map-form schema
+  definitions.
   """
 
   @option_defaults %{strict: false}

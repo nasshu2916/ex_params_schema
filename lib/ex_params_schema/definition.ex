@@ -1,9 +1,9 @@
 defmodule ExParamsSchema.Definition do
   @moduledoc """
-  DSL と map 形式のフィールド定義を正規化・検証します。
+  Normalizes and validates field definitions written in the DSL and map forms.
 
-  このモジュールは関連する機能をまとめる入口です。個別の処理は
-  `Normalizer`、`Validator`、`Compiler` に分割されています。
+  This module is the entry point for the related functionality. Individual operations are
+  split among `Normalizer`, `Validator`, and `Compiler`.
   """
 
   alias ExParamsSchema.Definition.{Compiler, Normalizer, Options, Validator}

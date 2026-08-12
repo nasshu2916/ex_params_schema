@@ -1,9 +1,9 @@
 defmodule ExParamsSchema.Schema do
   @moduledoc """
-  正規化済みフィールド、JSON Schema、検証用データをまとめるコンパイル済みスキーマです。
+  Represents a compiled schema containing normalized fields, JSON Schema, and validation data.
 
-  `ExParamsSchema.compile!/2` が生成します。構造体の内部表現と直接操作用の関数は将来変更する
-  可能性があるため、通常は `ExParamsSchema` の公開 API を使用してください。
+  It is created by `ExParamsSchema.compile!/2`. The struct's internal representation and its
+  direct-operation functions may change, so use the public `ExParamsSchema` API in normal use.
   """
 
   alias ExParamsSchema.Definition.Field

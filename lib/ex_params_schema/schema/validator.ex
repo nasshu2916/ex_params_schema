@@ -1,9 +1,9 @@
 defmodule ExParamsSchema.Schema.Validator do
   @moduledoc """
-  JSON Schema による検証結果を ExParamsSchema のエラー形式へ変換します。
+  Converts JSON Schema validation results into ExParamsSchema error formats.
 
-  `ExJsonSchema` との統合に関する内部モジュールです。通常は `parse/2` または
-  `parse_detailed/2` を使用してください。
+  This internal module integrates with `ExJsonSchema`. Use `parse/2` or `parse_detailed/2` in
+  normal use.
   """
 
   alias ExParamsSchema.{Schema, Schema.JsonPointer}

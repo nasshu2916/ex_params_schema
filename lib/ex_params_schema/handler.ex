@@ -1,10 +1,10 @@
 defmodule ExParamsSchema.Handler do
   @moduledoc """
-  LiveView callback に params schema を関連付け、受信値を変換します。
+  Associates params schemas with LiveView callbacks and casts received values.
 
-  `@params_schema` を対象 callback の直前に置くと、callback 本体へ入る前に `parse/1` を呼び出します。
-  モジュールを指定した場合は構造体、スキーマ定義の map を指定した場合は map が callback の params に
-  束縛されます。
+  Place `@params_schema` immediately before a supported callback to call `parse/1` before entering
+  its body. A module schema binds a struct to the callback's params, while a map schema definition
+  binds a map.
 
       use ExParamsSchema.Handler
 
@@ -14,11 +14,12 @@ defmodule ExParamsSchema.Handler do
         {:noreply, socket}
       end
 
-  ## 対応 callback
+  ## Supported callbacks
 
-  `@params_schema` は public な `handle_event/3`、`handle_params/3`、`handle_info/2` にだけ
-  指定できます。`handle_event/3` の第 2 引数と `handle_params/3` の第 1 引数は、いずれも変数へ
-  束縛してください。`handle_info/2` のタプル内 payload は `params` という変数名で束縛します。
+  `@params_schema` can be specified only for public `handle_event/3`, `handle_params/3`, and
+  `handle_info/2` callbacks. Bind the second argument of `handle_event/3` and the first argument
+  of `handle_params/3` to variables. Bind the tuple payload of `handle_info/2` to a variable named
+  `params`.
 
       @params_schema Params.RecordUpdate
       def handle_info({:record_update, params}, socket) do
@@ -26,26 +27,26 @@ defmodule ExParamsSchema.Handler do
         {:noreply, socket}
       end
 
-  注釈のない callback clause は変換されません。
+  Callback clauses without the annotation are not transformed.
 
-  ## エラー処理
+  ## Error handling
 
-  parse エラーを表示したい場合は、LiveView ごとにエラーハンドラーを指定できます。
+  To display parse errors, specify an error handler for each LiveView.
 
       use ExParamsSchema.Handler,
         on_error: :handle_params_error
 
-  エラーハンドラーは `handler(source, reason, socket)` として呼び出されます。`handle_event/3` の
-  `source` はイベント名、`handle_params/3` と `handle_info/2` の `source` は変換前の params です。
-  ハンドラーは対象 callback に適した戻り値（通常は `{:noreply, socket}`）を返す必要があります。
+  The error handler is called as `handler(source, reason, socket)`. For `handle_event/3`, `source`
+  is the event name; for `handle_params/3` and `handle_info/2`, it is the params before casting.
+  The handler must return a value appropriate for the callback, usually `{:noreply, socket}`.
 
-  `on_error:` を省略した場合、parse エラー時は `{:noreply, socket}` を返します。
+  When `on_error:` is omitted, parse errors return `{:noreply, socket}`.
 
-  ## コンパイル時エラー
+  ## Compile-time errors
 
-  `@params_schema` を対応外の関数、private 関数、または対応 callback でない arity に指定すると
-  `ArgumentError` になります。変換対象の params を変数へ束縛していない場合、または
-  `handle_info/2` の payload を `params` という変数名で束縛していない場合も `ArgumentError` になります。
+  Specifying `@params_schema` on an unsupported function, a private function, or an unsupported
+  callback arity raises `ArgumentError`. It also raises `ArgumentError` when the params to be
+  cast are not bound to variables, or when the `handle_info/2` payload is not bound to `params`.
   """
 
   @doc """

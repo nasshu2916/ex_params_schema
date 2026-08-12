@@ -1,9 +1,9 @@
 defmodule ExParamsSchema.ValueCaster do
   @moduledoc """
-  正規化済みの型定義に従って、単一値、配列、object を再帰的に変換します。
+  Recursively casts scalar values, arrays, and objects according to normalized type definitions.
 
-  `ExParamsSchema.Parser` と default 値のコンパイル処理が共有する低水準モジュールです。
-  通常の入力変換では `ExParamsSchema.parse/2` を使用してください。
+  This low-level module is shared by `ExParamsSchema.Parser` and default-value compilation.
+  Use `ExParamsSchema.parse/2` for normal input casting.
   """
 
   alias ExParamsSchema.Caster

@@ -1,8 +1,9 @@
 defmodule ExParamsSchema.Schema.ErrorPath do
   @moduledoc """
-  JSON Schema のエラーパスを、スキーマのエラー定義へ対応付けます。
+  Maps JSON Schema error paths to schema error definitions.
 
-  JSON Pointer のデコードと、最も具体的なエラー定義の選択をまとめる内部モジュールです。
+  This internal module combines JSON Pointer decoding and selection of the most specific error
+  definition.
   """
 
   alias ExParamsSchema.Schema.JsonPointer

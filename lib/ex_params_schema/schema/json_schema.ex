@@ -1,8 +1,8 @@
 defmodule ExParamsSchema.Schema.JsonSchema do
   @moduledoc """
-  正規化済みフィールドから JSON Schema Draft 7 を組み立てます。
+  Builds JSON Schema Draft 7 documents from normalized fields.
 
-  `ExParamsSchema.json_schema/1`・`json_schema/2` を支える内部モジュールです。
+  This internal module powers `ExParamsSchema.json_schema/1` and `json_schema/2`.
   """
 
   alias ExParamsSchema.Definition

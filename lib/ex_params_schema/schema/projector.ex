@@ -1,8 +1,8 @@
 defmodule ExParamsSchema.Schema.Projector do
   @moduledoc """
-  変換済みの値を JSON Schema 検証用の JSON 互換の値へ変換します。
+  Converts cast values into JSON-compatible values for JSON Schema validation.
 
-  日付、日時、enum、custom type、ネストした object・array の表現を変換します。
+  It handles dates, datetimes, enums, custom types, and nested objects and arrays.
   """
 
   alias ExParamsSchema.Definition.Field

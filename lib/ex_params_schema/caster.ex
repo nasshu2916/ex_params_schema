@@ -1,9 +1,9 @@
 defmodule ExParamsSchema.Caster do
   @moduledoc """
-  DSL の組み込み型へ入力値を変換します。
+  Casts input values to the DSL's built-in types.
 
-  パーサー内部で使用します。個別の型変換を直接利用する必要がある場合を除き、
-  `ExParamsSchema.parse/2` を使用してください。
+  It is used internally by the parser. Use `ExParamsSchema.parse/2` unless you need direct
+  access to individual type casts.
   """
 
   @type cast_result ::

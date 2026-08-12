@@ -1,14 +1,15 @@
 defmodule ExParamsSchema.Type do
   @moduledoc """
-  独自型を `ExParamsSchema` のフィールドとして利用するための仕様です。
+  Specifies how to use custom types as `ExParamsSchema` fields.
 
-  adapter は外部入力をドメイン値またはプリミティブ値へ変換し、その値を JSON Schema 検証用の
-  JSON 互換の値へ変換します。標準制約の検証は adapter ではなく `ex_json_schema` が担当します。
+  An adapter casts external input to a domain or primitive value, then converts that value to a
+  JSON-compatible value for JSON Schema validation. `ex_json_schema`, rather than the adapter,
+  validates standard constraints.
 
-  `typespec/0` を実装すると、生成される params 構造体のフィールド型を AST で指定できます。
-  実装しない場合は、struct adapter の `t/0` を参照し、それ以外は `dynamic()` として扱われます。
+  Implement `typespec/0` to specify the generated params struct's field type as an AST. When it
+  is not implemented, a struct adapter's `t/0` is used; all other adapters use `dynamic()`.
 
-  最小の adapter は必須 callback 3 つを実装します。
+  A minimal adapter implements the three required callbacks.
 
       defmodule MyApp.TrimmedString do
         @behaviour ExParamsSchema.Type
@@ -27,8 +28,7 @@ defmodule ExParamsSchema.Type do
         def typespec, do: quote(do: String.t())
       end
 
-  フィールドでは `{Module, adapter_options}` を型として指定します。フィールド option は外側の
-  tuple に指定します。
+  Specify `{Module, adapter_options}` as the field type. Specify field options outside the tuple.
 
       field :slug, {MyApp.TrimmedString, []}, min_length: 1, error: :invalid_slug
   """
