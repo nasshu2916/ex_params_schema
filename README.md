@@ -82,6 +82,13 @@ iex> Enum.map(errors, &{&1.path, &1.keyword, &1.reason, &1.details})
 ]
 ```
 
+Group detailed errors by field path for form rendering with `ValidationError.to_form_errors/1`.
+
+```elixir
+iex> ExParamsSchema.ValidationError.to_form_errors(errors)
+%{["id"] => [:invalid_id], ["value"] => [:invalid_value]}
+```
+
 Use `ExParamsSchema.parse_detailed/2` with a compiled schema:
 
 ```elixir

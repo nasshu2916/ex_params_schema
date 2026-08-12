@@ -45,6 +45,39 @@ defmodule ExParamsSchema.PublicApiTest do
             ]} = ExParamsSchema.parse_detailed([], schema)
   end
 
+  test "詳細エラーをフォーム表示用にパスごとでまとめる" do
+    errors = [
+      %ExParamsSchema.ValidationError{path: ["email"], keyword: :format, reason: :invalid_email},
+      %ExParamsSchema.ValidationError{path: ["email"], keyword: :min_length, reason: :invalid_email},
+      %ExParamsSchema.ValidationError{path: ["profile", "name"], keyword: :cast, reason: :invalid_name}
+    ]
+
+    assert ExParamsSchema.ValidationError.to_form_errors(errors) == %{
+             ["email"] => [:invalid_email, :invalid_email],
+             ["profile", "name"] => [:invalid_name]
+           }
+  end
+
+  test "フォーム表示用エラーは配列の添字を含むパスを保持する" do
+    errors = [
+      %ExParamsSchema.ValidationError{
+        path: ["entries", 0, "name"],
+        keyword: :min_length,
+        reason: :invalid_name
+      },
+      %ExParamsSchema.ValidationError{
+        path: ["entries", 1, "name"],
+        keyword: :cast,
+        reason: :invalid_name
+      }
+    ]
+
+    assert ExParamsSchema.ValidationError.to_form_errors(errors) == %{
+             ["entries", 0, "name"] => [:invalid_name],
+             ["entries", 1, "name"] => [:invalid_name]
+           }
+  end
+
   test "compileとjson_schemaの未知オプションを拒否する" do
     assert_raise ArgumentError,
                  "compile! options cannot contain unknown keys. Allowed keys: :strict",

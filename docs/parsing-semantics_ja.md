@@ -104,6 +104,10 @@ castまたは検証に失敗した場合、フィールドの`error:`を返す�
 整数添字）、`keyword`、`reason`、`details` を持つ。`reason` は通常の `parse` が返す `error:` と
 同じ値である。
 
+`ExParamsSchema.ValidationError.to_form_errors/1` は、エラーを `path` ごとに
+`%{["email"] => [:invalid_email]}` のような map にまとめる。path を保つため、ネストした object と
+array の要素も区別できる。
+
 JSON Schema 検証で複数の違反があれば、それぞれのエラーを返す。必須値の欠損、型変換、strict mode の
 未知キーも、すべての field・入れ子の object・array 要素を走査してまとめて返す。これらの `keyword` は
 それぞれ `:cast` または `:additional_properties` となる。変換エラーがある場合、完全な型付き値を作れないため

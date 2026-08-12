@@ -5,6 +5,7 @@
 ### Added
 
 - Added a sample project using `ExParamsSchema.Handler` and JSON Schema validation.
+- Added `ExParamsSchema.ValidationError.to_form_errors/1` to group detailed validation errors by field path for form rendering.
 
 ### Changed
 

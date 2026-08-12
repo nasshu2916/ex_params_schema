@@ -80,4 +80,6 @@ Nested values use the nearest `error:`. For multiple JSON Schema errors, fields 
 
 `parse_detailed/1` and `parse_detailed/2` return the same successful value as ordinary `parse`; on failure, they return a list of `ExParamsSchema.ValidationError`. Each error has `path` (string map keys and integer list indices), `keyword`, `reason`, and `details`. `reason` is the same value returned by ordinary `parse` through `error:`.
 
+`ExParamsSchema.ValidationError.to_form_errors/1` groups errors by their `path` into a map such as `%{["email"] => [:invalid_email]}`. Paths are preserved so nested objects and array items remain distinguishable.
+
 Every JSON Schema violation is returned when there are multiple violations. Missing required values, type-conversion errors, and strict-mode unknown keys are collected across every field, nested object, and array item. Their `keyword` is `:cast` or `:additional_properties`, respectively. JSON Schema validation is not run when conversion errors exist because a complete typed value is unavailable.

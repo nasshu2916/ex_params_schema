@@ -82,6 +82,13 @@ iex> Enum.map(errors, &{&1.path, &1.keyword, &1.reason, &1.details})
 ]
 ```
 
+フォーム表示用には `ValidationError.to_form_errors/1` で詳細エラーを field path ごとにまとめられます。
+
+```elixir
+iex> ExParamsSchema.ValidationError.to_form_errors(errors)
+%{["id"] => [:invalid_id], ["value"] => [:invalid_value]}
+```
+
 コンパイル済み schema を使う場合は `ExParamsSchema.parse_detailed/2` を利用します。
 
 ```elixir
