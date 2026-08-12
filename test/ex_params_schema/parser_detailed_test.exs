@@ -47,7 +47,47 @@ defmodule ExParamsSchema.ParserDetailedTest do
                 keyword: :cast,
                 reason: :invalid_first
               }
-            ]} = ExParamsSchema.parse_detailed(%{"first" => "invalid"}, schema)
+            ]} =
+             ExParamsSchema.parse_detailed(
+               %{
+                 "first" => "invalid",
+                 "payload" => %{"count" => "1"},
+                 "entries" => [%{"value" => "1"}]
+               },
+               schema
+             )
+  end
+
+  test "必須値不足と型変換エラーをフィールド宣言順にまとめて返す" do
+    schema = validation_schema()
+
+    assert {:error,
+            [
+              %ExParamsSchema.ValidationError{path: ["first"], keyword: :cast, reason: :invalid_first},
+              %ExParamsSchema.ValidationError{
+                path: ["payload", "count"],
+                keyword: :cast,
+                reason: :invalid_count
+              },
+              %ExParamsSchema.ValidationError{
+                path: ["entries", 0, "value"],
+                keyword: :cast,
+                reason: :invalid_entry_value
+              },
+              %ExParamsSchema.ValidationError{
+                path: ["entries", 1, "value"],
+                keyword: :cast,
+                reason: :invalid_entry_value
+              }
+            ]} =
+             ExParamsSchema.parse_detailed(
+               %{
+                 "first" => "invalid",
+                 "payload" => %{},
+                 "entries" => [%{"value" => "invalid"}, %{}]
+               },
+               schema
+             )
   end
 
   test "ネストしたobjectとarrayの型変換エラーに完全なpathを付与する" do
@@ -147,6 +187,29 @@ defmodule ExParamsSchema.ParserDetailedTest do
 
     assert {:error, [%ExParamsSchema.ValidationError{path: ["123"], reason: {:unknown_param, 123}}]} =
              ExParamsSchema.Parser.parse_detailed(%{"count" => "1", 123 => true}, schema)
+  end
+
+  test "strict modeの未知キーと型変換エラーをまとめて返す" do
+    schema = ExParamsSchema.compile!(%{count: {:integer, error: :invalid_count}}, strict: true)
+
+    assert {:error,
+            [
+              %ExParamsSchema.ValidationError{
+                path: ["another"],
+                keyword: :additional_properties,
+                reason: {:unknown_param, "another"}
+              },
+              %ExParamsSchema.ValidationError{
+                path: ["extra"],
+                keyword: :additional_properties,
+                reason: {:unknown_param, "extra"}
+              },
+              %ExParamsSchema.ValidationError{path: ["count"], keyword: :cast, reason: :invalid_count}
+            ]} =
+             ExParamsSchema.parse_detailed(
+               %{"count" => "invalid", "extra" => true, "another" => true},
+               schema
+             )
   end
 
   test "nested strict objectの未知キーも完全なpathとadditional_propertiesを返す" do

@@ -256,8 +256,9 @@ defmodule ExParamsSchema do
       true
 
   各エラーの `path`、`keyword`、`reason` を UI のフィールドメッセージに利用できます。
-  `reason` は通常の `parse/2` と同じ `error:` の値です。型変換または必須値の読み取りが完了する
-  前に失敗した場合は、`keyword: :cast` のエラーを 1 件返します。
+  `reason` は通常の `parse/2` と同じ `error:` の値です。型変換、必須値の読み取り、strict mode の
+  未知キーも、すべてのフィールド・入れ子の object・array 要素から収集します。型変換エラーの
+  `keyword` は `:cast`、未知キーの `keyword` は `:additional_properties` です。
   """
   @spec parse_detailed(map(), compiled_schema()) :: detailed_parse_result()
   defdelegate parse_detailed(params, schema), to: ExParamsSchema.Parser

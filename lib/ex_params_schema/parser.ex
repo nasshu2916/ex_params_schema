@@ -68,13 +68,21 @@ defmodule ExParamsSchema.Parser do
   """
   @spec parse_detailed(map(), Schema.t()) :: detailed_parse_result()
   def parse_detailed(params, %Schema{} = schema) when is_map(params) do
-    parse_with(
-      params,
-      schema,
-      &reject_unknown_fields_detailed/3,
-      &validate_detailed/2,
-      &detailed_cast_error/1
-    )
+    unknown_errors = unknown_field_errors(params, schema.fields, schema.strict)
+
+    case ValueCaster.cast_fields_detailed(params, schema.fields) do
+      {:ok, parsed} when unknown_errors == [] ->
+        case validate_detailed(schema, parsed) do
+          :ok -> {:ok, parsed}
+          {:error, errors} -> {:error, errors}
+        end
+
+      {:ok, _parsed} ->
+        {:error, unknown_errors}
+
+      {:error, errors} ->
+        {:error, unknown_errors ++ errors}
+    end
   end
 
   def parse_detailed(_params, %Schema{}) do
@@ -110,15 +118,20 @@ defmodule ExParamsSchema.Parser do
     end
   end
 
-  @spec reject_unknown_fields_detailed(map(), [Field.t()], boolean()) ::
-          :ok | {:error, ExParamsSchema.ValidationError.t()}
-  defp reject_unknown_fields_detailed(_params, _fields, false), do: :ok
+  @spec unknown_field_errors(map(), [Field.t()], boolean()) :: [ExParamsSchema.ValidationError.t()]
+  defp unknown_field_errors(_params, _fields, false), do: []
 
-  defp reject_unknown_fields_detailed(params, fields, true) do
-    case Field.unknown_input_key(params, fields) do
-      nil -> :ok
-      key -> {:error, unknown_field_error(key)}
-    end
+  defp unknown_field_errors(params, fields, true) do
+    allowed_keys =
+      fields
+      |> Enum.flat_map(fn field -> [Field.input_key(field), field.name] end)
+      |> MapSet.new()
+
+    params
+    |> Map.keys()
+    |> Enum.reject(&MapSet.member?(allowed_keys, &1))
+    |> Enum.sort_by(&unknown_field_path/1)
+    |> Enum.map(&unknown_field_error/1)
   end
 
   @spec validate(Schema.t(), map()) :: :ok | {:error, ExParamsSchema.error_reason()}
@@ -135,19 +148,9 @@ defmodule ExParamsSchema.Parser do
     |> then(&Validator.validate_detailed(schema, &1))
   end
 
-  @spec cast_error([String.t()], ExParamsSchema.error_reason()) :: ExParamsSchema.ValidationError.t()
-  defp cast_error(path, reason) do
-    %ExParamsSchema.ValidationError{path: path, keyword: :cast, reason: reason}
-  end
-
   defp unwrap_cast_error({path, reason}) when is_list(path), do: {:error, reason}
   defp unwrap_cast_error(%ExParamsSchema.ValidationError{reason: reason}), do: {:error, reason}
   defp unwrap_cast_error(reason), do: {:error, reason}
-
-  defp detailed_cast_error([%ExParamsSchema.ValidationError{} | _] = errors), do: {:error, errors}
-  defp detailed_cast_error(%ExParamsSchema.ValidationError{} = error), do: {:error, [error]}
-  defp detailed_cast_error({path, reason}), do: {:error, [cast_error(path, reason)]}
-  defp detailed_cast_error(reason), do: {:error, [cast_error([], reason)]}
 
   @spec unknown_field_error(term()) :: ExParamsSchema.ValidationError.t()
   defp unknown_field_error(key) do

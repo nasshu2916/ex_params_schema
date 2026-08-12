@@ -104,6 +104,7 @@ castまたは検証に失敗した場合、フィールドの`error:`を返す�
 整数添字）、`keyword`、`reason`、`details` を持つ。`reason` は通常の `parse` が返す `error:` と
 同じ値である。
 
-JSON Schema 検証で複数の違反があれば、それぞれのエラーを返す。一方、必須値の欠損、型変換、
-strict mode の未知キーは変換段階で検出されるため、最初のエラーだけを返す。これらの `keyword` は
-それぞれ `:cast` または `:additional_properties` となる。
+JSON Schema 検証で複数の違反があれば、それぞれのエラーを返す。必須値の欠損、型変換、strict mode の
+未知キーも、すべての field・入れ子の object・array 要素を走査してまとめて返す。これらの `keyword` は
+それぞれ `:cast` または `:additional_properties` となる。変換エラーがある場合、完全な型付き値を作れないため
+JSON Schema による検証は実行しない。
