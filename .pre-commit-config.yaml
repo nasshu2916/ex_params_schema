@@ -1,0 +1,37 @@
+repos:
+  - repo: local
+    hooks:
+      - id: mix-format
+        name: mix format --check-formatted
+        entry: mix format --check-formatted
+        language: system
+        types_or: [elixir]
+        pass_filenames: false
+
+      - id: credo
+        name: mix credo --strict
+        entry: mix credo --strict
+        language: system
+        types_or: [elixir]
+        pass_filenames: false
+
+      - id: compile
+        name: mix compile --warnings-as-errors
+        entry: mix compile --warnings-as-errors
+        language: system
+        types_or: [elixir]
+        pass_filenames: false
+
+      - id: dialyzer
+        name: mix dialyzer
+        entry: mix dialyzer
+        language: system
+        types_or: [elixir]
+        pass_filenames: false
+
+      - id: test
+        name: mix test --cover --warnings-as-errors
+        entry: mix test --cover --warnings-as-errors
+        language: system
+        types_or: [elixir]
+        pass_filenames: false
