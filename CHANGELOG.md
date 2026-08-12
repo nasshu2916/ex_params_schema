@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Added `mix ex_params_schema.export_json_schema` to export a `defschema` module's generated JSON Schema as formatted JSON to standard output or an output file.
+
 ## [0.1.1] - 2026-08-12
 
 ### Added

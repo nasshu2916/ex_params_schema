@@ -161,6 +161,18 @@ iex> ExParamsSchema.parse(%{"page" => "2"}, schema)
 {:ok, %{page: 2, query: nil}}
 ```
 
+## JSON Schema の出力
+
+`defschema` を使うモジュールから生成した JSON Schema は Mix タスクで出力できます。
+
+```shell
+mix ex_params_schema.export_json_schema MyAppWeb.Params.Update
+mix ex_params_schema.export_json_schema MyAppWeb.Params.Update --output priv/schemas/update.json
+```
+
+最初のコマンドは整形済み JSON を標準出力します。`--output` を指定すると、必要な親ディレクトリを作成して
+指定したファイルへ schema を書き出します。
+
 ## ドキュメント
 
 - [DSL リファレンス](docs/dsl_ja.md): 型、制約、nested map・list、独自型

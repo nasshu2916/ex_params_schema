@@ -10,6 +10,7 @@ defmodule ExParamsSchema.MixProject do
       description: "Converts and validates string-oriented params into typed Elixir values",
       elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
+      dialyzer: [plt_add_apps: [:mix]],
       test_coverage: [summary: [threshold: 90]],
       package: package(),
       source_url: @source_url,
@@ -28,6 +29,7 @@ defmodule ExParamsSchema.MixProject do
   defp deps do
     [
       {:ex_json_schema, "~> 0.11.4"},
+      {:jason, "~> 1.4"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.40.3", only: :dev, runtime: false, warn_if_outdated: true}
