@@ -2,7 +2,7 @@ defmodule ExParamsSchema.Handler.Compiler do
   @moduledoc """
   Expands `ExParamsSchema.Handler` annotations into callback implementations.
 
-  This internal compile-time-only module rewrites LiveView callbacks.
+  This internal compile-time-only module rewrites supported callbacks.
   """
 
   alias ExParamsSchema.Handler.Compiler.Clause

@@ -1,6 +1,6 @@
 defmodule ExParamsSchema.Handler do
   @moduledoc """
-  Associates params schemas with LiveView callbacks and casts received values.
+  Associates params schemas with supported callbacks and casts received values.
 
   Place `@params_schema` immediately before a supported callback to call `parse/1` before entering
   its body. A module schema binds a struct to the callback's params, while a map schema definition
@@ -31,7 +31,7 @@ defmodule ExParamsSchema.Handler do
 
   ## Error handling
 
-  To display parse errors, specify an error handler for each LiveView.
+  To handle parse errors, specify an error handler for the module.
 
       use ExParamsSchema.Handler,
         on_error: :handle_params_error

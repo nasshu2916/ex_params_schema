@@ -9,7 +9,7 @@
 - Converts string integers, booleans, dates, and datetimes into Elixir values
 - Generates a params struct, `t/0`, and `parse/1` from a schema
 - Converts and validates arbitrary params with `parse/1` and `parse/2`
-- Provides an integration that converts params immediately before LiveView callbacks
+- Provides an integration that converts params immediately before supported callbacks
 - Supports nested maps and lists, defaults, custom types, and JSON Schema Draft 7 constraints
 
 ## Installation
@@ -114,7 +114,7 @@ iex> Enum.map(errors, &{&1.path, &1.keyword, &1.reason})
 
 See [parsing semantics](docs/parsing-semantics.md) for the meanings of `optional:`, `nullable:`, and `default:`, including how empty strings are handled.
 
-## LiveView integration
+## Callback integration
 
 `ExParamsSchema.Handler` converts params immediately before callbacks that have an `@params_schema`. On success, the callback receives a struct as `params`; on failure, the function specified by `on_error:` is called.
 

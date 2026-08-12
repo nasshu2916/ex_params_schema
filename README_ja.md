@@ -9,8 +9,8 @@
 - 文字列の整数・boolean・日付・日時を Elixir の値へ変換する
 - schema から params 用の構造体、`t/0`、`parse/1` を生成する
 - `parse/1`・`parse/2` で任意の params を変換・検証する
-- LiveView callback の直前で params を自動変換する統合機能を提供する
-- nested map・list、既定値、独自型、JSON Schema Draft 7 の制約を扱う
+- 対応する callback の直前で params を自動変換する統合機能を提供する
+- ネストした map・list、既定値、独自型、JSON Schema Draft 7 の制約を扱う
 
 ## インストール
 
@@ -114,7 +114,7 @@ iex> Enum.map(errors, &{&1.path, &1.keyword, &1.reason})
 
 `optional:`、`nullable:`、`default:` の意味と空文字の扱いは、[パースの仕様](docs/parsing-semantics_ja.md)を参照してください。
 
-## LiveView との統合
+## callback との統合
 
 `ExParamsSchema.Handler` を使うと、`@params_schema` を置いた callback の直前で params を変換できます。成功時は callback の `params` に構造体が渡り、失敗時は `on_error:` で指定した関数が呼び出されます。
 
