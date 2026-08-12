@@ -5,19 +5,19 @@ defmodule TaskManagerTest do
 
   @valid_params %{
     "task-id" => "42",
-    "title" => "Release notes を確認する",
+    "title" => "Review release notes",
     "priority" => "high",
     "estimate-minutes" => "90",
     "labels" => ["release", "documentation"],
     "schedule" => %{"due-on" => "2026-08-15", "notify-assignee" => "true"}
   }
 
-  test "API、handle_event、handle_info が同じ型付きタスクを受け取る" do
+  test "API, handle_event, and handle_info receive the same typed task" do
     result = TaskManager.run()
 
     expected_task = %{
       task_id: 42,
-      title: "Release notes を確認する",
+      title: "Review release notes",
       priority: :high,
       estimate_minutes: 90,
       labels: ["release", "documentation"],
@@ -29,13 +29,13 @@ defmodule TaskManagerTest do
     assert result.live_info_task == expected_task
   end
 
-  test "API は不正な params を 422 相当の結果で返す" do
+  test "API returns a 422-equivalent result for invalid params" do
     params = Map.put(@valid_params, "priority", "urgent")
 
     assert {:unprocessable_entity, %{error: :invalid_priority}} = TasksController.create(params)
   end
 
-  test "LiveView callback は event と info の両方で params エラーを処理する" do
+  test "LiveView callbacks handle params errors for both events and info messages" do
     params = Map.put(@valid_params, "priority", "urgent")
 
     assert {:noreply, %{params_error: %{source: "create_task", reason: :invalid_priority}}} =
@@ -45,12 +45,12 @@ defmodule TaskManagerTest do
              TaskLive.handle_info({:task_synced, params}, %{})
   end
 
-  test "不正な入力は path 付きの詳細エラーを返す" do
+  test "invalid input returns detailed errors with paths" do
     assert {:error, errors} = TaskManager.run().errors
     assert [%{path: ["priority"], keyword: :cast, reason: :invalid_priority}] = errors
   end
 
-  test "JSON Schema を生成する" do
+  test "generates JSON Schema" do
     schema = TaskManager.run().schema
 
     assert schema["type"] == "object"

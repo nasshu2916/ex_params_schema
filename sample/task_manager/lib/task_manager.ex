@@ -26,7 +26,7 @@ defmodule TaskManager do
   def print do
     result = run()
 
-    IO.puts("API と LiveView が変換したタスク:")
+    IO.puts("Tasks cast by the API and LiveView:")
 
     IO.inspect(%{
       api: result.api_task,
@@ -34,16 +34,16 @@ defmodule TaskManager do
       handle_info: result.live_info_task
     })
 
-    IO.puts("\n詳細エラー:")
+    IO.puts("\nDetailed errors:")
     IO.inspect(result.errors)
-    IO.puts("\nJSON Schema の必須フィールド:")
+    IO.puts("\nRequired JSON Schema fields:")
     IO.inspect(result.schema["required"])
   end
 
   defp valid_params do
     %{
       "task-id" => "42",
-      "title" => "Release notes を確認する",
+      "title" => "Review release notes",
       "priority" => "high",
       "estimate-minutes" => "90",
       "labels" => ["release", "documentation"],
