@@ -14,7 +14,7 @@ defmodule ExParamsSchema.Schema.Options do
   @type t :: %__MODULE__{strict: boolean()}
 
   @doc """
-  optionを検証し、既定値を補完した内部表現へ正規化します。
+  Validates options and normalizes them to the internal representation with defaults applied.
 
       iex> ExParamsSchema.Schema.Options.normalize!([strict: true], "schema")
       %ExParamsSchema.Schema.Options{strict: true}

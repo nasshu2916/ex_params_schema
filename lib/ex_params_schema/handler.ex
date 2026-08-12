@@ -50,10 +50,10 @@ defmodule ExParamsSchema.Handler do
   """
 
   @doc """
-  callback の params 自動変換を有効にします。
+  Enables automatic parameter casting for callbacks.
 
-  `on_error:` には、parse エラー時に呼び出す関数名を atom で指定します。関数は
-  `handler(source, reason, socket)` の形で定義してください。
+  Set `on_error:` to the atom name of the function called on parse errors. Define the function as
+  `handler(source, reason, socket)`.
   """
   defmacro __using__(options) do
     validate_options!(options)

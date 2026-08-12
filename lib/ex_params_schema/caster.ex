@@ -10,7 +10,7 @@ defmodule ExParamsSchema.Caster do
           {:ok, value :: ExParamsSchema.value()} | {:error, reason :: ExParamsSchema.error_reason()}
 
   @doc """
-  入力値を DSL の組み込み型へ変換します。
+  Casts input values to DSL built-in types.
 
       iex> ExParamsSchema.Caster.cast("12", :integer, :invalid_count)
       {:ok, 12}
@@ -33,7 +33,7 @@ defmodule ExParamsSchema.Caster do
       iex> ExParamsSchema.Caster.cast("merge", {:enum, [:merge, :replace]}, :invalid_mode)
       {:ok, :merge}
 
-  変換できない値は、呼び出し側から渡された `reason` をエラーとして返します。
+  Values that cannot be cast return the `reason` supplied by the caller as an error.
   """
   @spec cast(ExParamsSchema.value(), ExParamsSchema.field_type(), ExParamsSchema.error_reason()) ::
           cast_result()

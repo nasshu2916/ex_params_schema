@@ -17,7 +17,7 @@ defmodule ExParamsSchema.Schema.JsonSchema do
         }
 
   @doc """
-  コンパイル済みフィールドから JSON Schema とエラーパス定義を組み立てます。
+  Builds JSON Schema and error-path definitions from validated fields.
 
       iex> fields = ExParamsSchema.Definition.compile_fields!([{:count, :integer, [minimum: 1]}])
       iex> {schema, errors} = ExParamsSchema.Schema.JsonSchema.build(fields, false)

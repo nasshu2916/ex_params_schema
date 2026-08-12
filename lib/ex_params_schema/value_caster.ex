@@ -29,7 +29,7 @@ defmodule ExParamsSchema.ValueCaster do
           {:ok, ExParamsSchema.value()} | {:error, [ExParamsSchema.ValidationError.t()]}
 
   @doc """
-  値を正規化済みの型へ変換します。
+  Casts a value to a normalized type.
 
       iex> ExParamsSchema.ValueCaster.cast(["1", 2], {:array, :integer, []}, [], :invalid_items)
       {:ok, [1, 2]}
@@ -38,8 +38,8 @@ defmodule ExParamsSchema.ValueCaster do
       iex> ExParamsSchema.ValueCaster.cast(%{"count" => "3"}, {:object, fields}, [], :invalid_payload)
       {:ok, %{count: 3}}
 
-  `nullable: true` の `nil` はそのまま返します。変換できない場合は指定されたエラー理由へ
-  正規化します。
+  Returns `nil` unchanged when `nullable: true`. Values that cannot be cast are normalized to the
+  supplied error reason.
 
       iex> ExParamsSchema.ValueCaster.cast(nil, :integer, [nullable: true], :invalid_count)
       {:ok, nil}

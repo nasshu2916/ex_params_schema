@@ -9,9 +9,9 @@ defmodule ExParamsSchema.Schema.ErrorPath do
   alias ExParamsSchema.Schema.JsonPointer
 
   @doc """
-  JSON Pointer に対応する宣言順、エラー理由、解決後のパスを返します。
+  Returns the declaration order, error reason, and resolved path for a JSON Pointer.
 
-  一致する定義が複数ある場合は、最も具体的なパスを選択します。
+  When multiple definitions match, chooses the most specific path.
   """
   @spec resolve([ExParamsSchema.Schema.error_definition()], String.t()) ::
           ExParamsSchema.Schema.resolved_error_path() | nil

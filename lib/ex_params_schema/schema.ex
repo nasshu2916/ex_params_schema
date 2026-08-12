@@ -38,11 +38,11 @@ defmodule ExParamsSchema.Schema do
         }
 
   @doc """
-  コンパイル済みフィールドを実行時に再利用できるスキーマへコンパイルします。
+  Compiles validated fields into a schema that can be reused at runtime.
 
-  フィールド定義の検証とコンパイルは `ExParamsSchema.Definition` が担います。通常は
-  map 形式の定義を受け付ける `ExParamsSchema.compile!/2` を使用してください。
-  後方互換性のためフィールド定義も受け付けますが、`Definition.compile_fields!/1` へ委譲します。
+  `ExParamsSchema.Definition` validates and compiles field definitions. Normally, use
+  `ExParamsSchema.compile!/2`, which accepts a map-based definition. Field definitions are also
+  accepted for backward compatibility and delegated to `Definition.compile_fields!/1`.
 
       iex> fields = ExParamsSchema.Definition.compile_fields!([{:count, :integer, [minimum: 1]}])
       iex> schema = ExParamsSchema.Schema.compile!(fields)
@@ -68,11 +68,11 @@ defmodule ExParamsSchema.Schema do
   end
 
   @doc """
-  コンパイル済みスキーマまたはコンパイル済みフィールドから JSON Schema Draft 7 を返します。
-  フィールド定義を渡した場合は、後方互換性のため `Definition.compile_fields!/1` へ委譲します。
+  Returns JSON Schema Draft 7 from a compiled schema or validated fields. Field definitions are
+  delegated to `Definition.compile_fields!/1` for backward compatibility.
 
-  コンパイル済みスキーマに `strict` を指定した場合は、その指定に合わせて JSON Schema を
-  再生成します。指定を省略した場合は、コンパイル時に生成した JSON Schema を返します。
+  When `strict` is specified for a compiled schema, regenerates JSON Schema with that setting.
+  Otherwise, returns the JSON Schema generated at compile time.
 
       iex> fields = ExParamsSchema.Definition.compile_fields!([{:name, :string, []}])
       iex> ExParamsSchema.Schema.json_schema(fields)["required"]
@@ -100,7 +100,7 @@ defmodule ExParamsSchema.Schema do
   end
 
   @doc """
-  変換済みの値を JSON Schema が検証できる値へ変換します。
+  Converts cast values into values that JSON Schema can validate.
 
       iex> fields = ExParamsSchema.Definition.compile_fields!([{:published_on, :date, []}])
       iex> schema = ExParamsSchema.Schema.compile!(fields)
@@ -111,8 +111,8 @@ defmodule ExParamsSchema.Schema do
   def validation_data(%__MODULE__{} = schema, parsed),
     do: Projector.project(schema.fields, parsed)
 
-  @doc "JSON Pointer に対応する宣言順とエラー理由を返します。"
-  @deprecated "解決後のパスも必要なため resolve_error_path/2 を使用してください"
+  @doc "Returns the declaration order and error reason for a JSON Pointer."
+  @deprecated "Use resolve_error_path/2, which also returns the resolved path"
   @spec error_for_path(t(), String.t()) :: error_reference() | nil
   def error_for_path(%__MODULE__{} = schema, path) do
     case resolve_error_path(schema, path) do
@@ -121,7 +121,7 @@ defmodule ExParamsSchema.Schema do
     end
   end
 
-  @doc "JSON Pointer に対応する宣言順、エラー理由、解決後のパスを返します。"
+  @doc "Returns the declaration order, error reason, and resolved path for a JSON Pointer."
   @spec resolve_error_path(t(), String.t()) :: resolved_error_path() | nil
   def resolve_error_path(%__MODULE__{} = schema, pointer), do: ErrorPath.resolve(schema.errors, pointer)
 

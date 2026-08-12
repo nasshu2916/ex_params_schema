@@ -14,7 +14,7 @@ defmodule ExParamsSchema.Schema.JsonPointer do
   @type resolved_path :: [resolved_segment()]
 
   @doc """
-  JSON Pointer を未解決のセグメント列へ変換します。
+  Decodes a JSON Pointer into unresolved segments.
 
       iex> ExParamsSchema.Schema.JsonPointer.decode("#/a~1b~0c/0")
       {:ok, ["a/b~c", "0"]}
@@ -32,12 +32,12 @@ defmodule ExParamsSchema.Schema.JsonPointer do
   def decode(_pointer), do: :error
 
   @doc """
-  JSON Pointer を文字列キーと list 添字のパスへ変換します。
+  Parses a JSON Pointer into a path of string keys and list indices.
 
       iex> ExParamsSchema.Schema.JsonPointer.parse("#/entries/0/value")
       ["entries", 0, "value"]
 
-  `#` はルートを表します。不正な Pointer は空のパスとして扱います。
+  `#` represents the root. Invalid pointers are treated as an empty path.
   """
   @spec parse(String.t()) :: resolved_path()
   def parse(pointer) do
@@ -48,15 +48,15 @@ defmodule ExParamsSchema.Schema.JsonPointer do
   end
 
   @doc """
-  JSON Pointer のパスを、list の添字を整数へ変換したパスにします。
+  Converts list indices in a JSON Pointer path to integers.
   """
   @spec resolve_segments(pointer_path()) :: resolved_path()
   def resolve_segments(path), do: Enum.map(path, &resolve_segment/1)
 
   @doc """
-  定義パターンがパスの先頭に一致するとき、解決後のパスを返します。
+  Returns the resolved path when a definition pattern matches the beginning of a path.
 
-  `:index` は 0 以上の整数のセグメントにのみ一致します。
+  `:index` matches only segments that are non-negative integers.
   """
   @spec match(pattern(), pointer_path()) :: {:ok, resolved_path()} | :error
   def match(pattern, path) do
@@ -67,7 +67,7 @@ defmodule ExParamsSchema.Schema.JsonPointer do
   end
 
   @doc """
-  JSON Pointer のセグメントを RFC 6901 の形式へエスケープします。
+  Escapes a JSON Pointer segment according to RFC 6901.
   """
   @spec escape_segment(String.t()) :: String.t()
   def escape_segment(segment) when is_binary(segment) do

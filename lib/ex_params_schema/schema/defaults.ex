@@ -33,7 +33,7 @@ defmodule ExParamsSchema.Schema.Defaults do
   end
 
   @doc """
-  default 値をフィールド型へ変換し、対応する JSON Schema で検証します。
+  Casts a default value to the field type and validates it with the corresponding JSON Schema.
 
       iex> fields = ExParamsSchema.Definition.compile_fields!([
       ...>   {:count, :integer, [default: "2", minimum: 1]}
@@ -44,7 +44,7 @@ defmodule ExParamsSchema.Schema.Defaults do
       iex> Keyword.fetch!(field.options, :default)
       2
 
-  変換できない値や制約を満たさない値は `ArgumentError` になります。
+  Values that cannot be cast or do not satisfy constraints raise `ArgumentError`.
   """
   @spec normalize!([Field.t()], ExJsonSchema.Schema.Root.t()) :: [Field.t()]
   def normalize!(fields, resolved) do

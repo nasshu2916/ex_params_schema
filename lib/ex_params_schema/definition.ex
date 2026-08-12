@@ -19,28 +19,28 @@ defmodule ExParamsSchema.Definition do
           options :: ExParamsSchema.field_options()
         }
 
-  @doc "DSL option と JSON Schema keyword の対応を返します。"
+  @doc "Returns the mapping between DSL options and JSON Schema keywords."
   @spec json_schema_options() :: Keyword.t(String.t())
   defdelegate json_schema_options(), to: Options
 
-  @doc "1 つの型定義を型と option に分解し、内部表現へ正規化します。"
+  @doc "Splits a type definition into its type and options and normalizes it to the internal representation."
   @spec normalize!(ExParamsSchema.definition()) :: normalized_definition()
   defdelegate normalize!(definition), to: Normalizer
 
-  @doc "map 形式のスキーマをフィールド定義のリストへ変換します。"
+  @doc "Converts a map-based schema into a list of field definitions."
   @spec fields_from_map!(%{required(atom()) => ExParamsSchema.definition()}) ::
           [ExParamsSchema.field()]
   defdelegate fields_from_map!(schema), to: Normalizer
 
-  @doc "フィールド定義全体を正規化し、名前と入力キーの重複を検証します。"
+  @doc "Normalizes all field definitions and validates unique names and input keys."
   @spec normalize_fields!([ExParamsSchema.field()]) :: [ExParamsSchema.field()]
   defdelegate normalize_fields!(fields), to: Validator
 
-  @doc "フィールド定義をパーサーが利用する構造体へコンパイルします。"
+  @doc "Compiles field definitions into structs used by the parser."
   @spec compile_fields!([ExParamsSchema.field()]) :: [ExParamsSchema.Definition.Field.t()]
   defdelegate compile_fields!(fields), to: Compiler
 
-  @doc "map 形式のスキーマ定義を検証済みフィールドへコンパイルします。"
+  @doc "Compiles a map-based schema definition into validated fields."
   @spec compile!(%{required(atom()) => ExParamsSchema.definition()}) :: [ExParamsSchema.Definition.Field.t()]
   def compile!(schema) when is_map(schema) do
     schema

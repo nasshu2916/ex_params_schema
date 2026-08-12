@@ -21,10 +21,10 @@ defmodule ExParamsSchema.Compiler do
       @type t :: unquote(struct_type)
 
       @doc """
-      受信したパラメーターを検証し、このモジュールの構造体へ変換します。
+      Validates received parameters and casts them into this module's struct.
 
-      成功時は `{:ok, t()}`、失敗時は `{:error, reason}` を返します。map 以外の入力には
-      `{:error, :invalid_params}` を返します。
+      Returns `{:ok, t()}` on success and `{:error, reason}` on failure. Non-map input returns
+      `{:error, :invalid_params}`.
       """
       @spec parse(term()) :: {:ok, t()} | {:error, ExParamsSchema.error_reason()}
       def parse(params) do
@@ -32,9 +32,9 @@ defmodule ExParamsSchema.Compiler do
       end
 
       @doc """
-      受信したパラメーターを検証・変換し、失敗時にフィールド単位の詳細エラーを返します。
+      Validates and casts received parameters, returning detailed, field-level errors on failure.
 
-      通常の `parse/1` と同じエラー理由を保ったまま、UI 表示向けの `path` と `keyword` を取得できます。
+      Preserves the error reasons from `parse/1` while providing `path` and `keyword` for UI display.
       """
       @spec parse_detailed(term()) :: {:ok, t()} | {:error, [ExParamsSchema.validation_error()]}
       def parse_detailed(params) do
@@ -42,7 +42,7 @@ defmodule ExParamsSchema.Compiler do
       end
 
       @doc """
-      このモジュールの定義から生成した JSON Schema Draft 7 を返します。
+      Returns JSON Schema Draft 7 generated from this module's definition.
       """
       @spec json_schema() :: map()
       def json_schema do

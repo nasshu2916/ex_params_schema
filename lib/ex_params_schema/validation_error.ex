@@ -45,10 +45,10 @@ defmodule ExParamsSchema.ValidationError do
   @type path_segment :: String.t() | non_neg_integer()
 
   @doc """
-  詳細検証エラーを、パスごとに `reason` をまとめたフォーム表示用の map に変換します。
+  Converts detailed validation errors into a form-friendly map that groups `reason` values by path.
 
-  `path` はそのまま map のキーになるため、ネストした object や array のエラーも区別されます。
-  各 `reason` の順序は入力のエラー list の順序を保ちます。
+  Because `path` is used directly as the map key, nested object and array errors remain distinct.
+  The order of each `reason` matches its order in the input error list.
   """
   @spec to_form_errors([t()]) :: %{required([path_segment()]) => [ExParamsSchema.error_reason()]}
   def to_form_errors(errors) do

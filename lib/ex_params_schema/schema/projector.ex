@@ -8,9 +8,9 @@ defmodule ExParamsSchema.Schema.Projector do
   alias ExParamsSchema.Definition.Field
 
   @doc """
-  検証済みのフィールド値を JSON 互換の map へ変換します。
+  Converts validated field values into a JSON-compatible map.
 
-  省略可能なフィールドの `nil` は出力から除外します。
+  Omits `nil` values for optional fields from the output.
 
       iex> fields = ExParamsSchema.Definition.compile_fields!([
       ...>   {:published_on, :date, []},
@@ -34,7 +34,7 @@ defmodule ExParamsSchema.Schema.Projector do
   end
 
   @doc """
-  型に応じて単一の値を JSON 互換の値へ変換します。
+  Converts a single value into a JSON-compatible value based on its type.
 
       iex> ExParamsSchema.Schema.Projector.project_value({:array, :date, []}, [~D[2026-07-22]])
       ["2026-07-22"]

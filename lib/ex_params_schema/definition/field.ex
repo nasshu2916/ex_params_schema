@@ -35,7 +35,7 @@ defmodule ExParamsSchema.Definition.Field do
           | normalized_object_type()
 
   @doc """
-  入力 map から値を取得するためのキーを返します。
+  Returns the key used to fetch a value from an input map.
 
       iex> ExParamsSchema.Definition.Field.input_key(%ExParamsSchema.Definition.Field{name: :display_name, type: :string})
       "display_name"
@@ -50,7 +50,7 @@ defmodule ExParamsSchema.Definition.Field do
   def input_key(name, options), do: Keyword.get(options, :source, Atom.to_string(name))
 
   @doc """
-  フィールド固有、継承、既定値の優先順でエラー理由を返します。
+  Returns the error reason, preferring field-specific, inherited, then default values.
 
       iex> field = %ExParamsSchema.Definition.Field{name: :count, type: :integer, options: [error: :invalid_count]}
       iex> ExParamsSchema.Definition.Field.error_reason(field, :invalid_params)
@@ -68,7 +68,7 @@ defmodule ExParamsSchema.Definition.Field do
   end
 
   @doc """
-  フィールドが省略可能かを返します。
+  Returns whether the field is optional.
 
       iex> ExParamsSchema.Definition.Field.optional?(%ExParamsSchema.Definition.Field{name: :label, type: :string, options: [optional: true]})
       true
@@ -79,9 +79,9 @@ defmodule ExParamsSchema.Definition.Field do
   def optional?(field), do: Keyword.get(field.options, :optional, false)
 
   @doc """
-  入力 map からフィールドの値を取得します。
+  Fetches a field value from an input map.
 
-  `source:` で指定したキーを優先し、存在しない場合はフィールド名の atom key を参照します。
+  Prefers the key configured with `source:` and falls back to the field name's atom key when absent.
 
       iex> field = %ExParamsSchema.Definition.Field{name: :count, type: :integer, options: [source: "input-count"]}
       iex> ExParamsSchema.Definition.Field.fetch_value(%{"input-count" => "1", count: "2"}, field)
@@ -102,9 +102,9 @@ defmodule ExParamsSchema.Definition.Field do
   end
 
   @doc """
-  入力に値がないフィールドの扱いを返します。
+  Returns how to handle a field that has no input value.
 
-  `default:` があればその値を優先し、なければ `optional:` の設定に従います。
+  Prefers `default:` when present; otherwise, follows the `optional:` setting.
 
       iex> field = %ExParamsSchema.Definition.Field{name: :count, type: :integer, options: [default: 0]}
       iex> ExParamsSchema.Definition.Field.missing_value(field)
@@ -125,9 +125,9 @@ defmodule ExParamsSchema.Definition.Field do
   end
 
   @doc """
-  省略可能なフィールドに対して、入力値を未指定相当として扱うかを返します。
+  Returns whether an input value should be treated as absent for an optional field.
 
-  文字列では空文字に加えて空白だけの値も未指定相当です。
+  For strings, whitespace-only values are treated as absent in addition to empty strings.
 
       iex> field = %ExParamsSchema.Definition.Field{name: :label, type: :string, options: [optional: true]}
       iex> ExParamsSchema.Definition.Field.optional_empty?(field, "  ")
@@ -148,9 +148,9 @@ defmodule ExParamsSchema.Definition.Field do
   def optional_empty?(%__MODULE__{}, _value), do: false
 
   @doc """
-  フィールド定義に含まれない最初の入力キーを返します。
+  Returns the first input key that is not included in the field definitions.
 
-  各フィールドでは `source:` のキーとフィールド名の atom key の両方を許可します。
+  Each field allows both its `source:` key and its field name's atom key.
 
       iex> fields = [%ExParamsSchema.Definition.Field{name: :count, type: :integer}]
       iex> ExParamsSchema.Definition.Field.unknown_input_key(%{"count" => "1"}, fields)
@@ -174,9 +174,9 @@ defmodule ExParamsSchema.Definition.Field do
   end
 
   @doc """
-  JSON Schema 検証用データからフィールド値を省略するかを返します。
+  Returns whether a field value should be omitted from JSON Schema validation data.
 
-  `optional: true` の `nil` だけを省略し、`nullable: true` の `nil` は検証対象として残します。
+  Only omits `nil` for `optional: true`; keeps `nil` for `nullable: true` as validation input.
 
       iex> optional = %ExParamsSchema.Definition.Field{name: :label, type: :string, options: [optional: true]}
       iex> ExParamsSchema.Definition.Field.omit_from_validation?(optional, nil)

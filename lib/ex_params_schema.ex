@@ -26,16 +26,16 @@ defmodule ExParamsSchema do
   alias ExParamsSchema.{Compiler, Definition, Schema}
   alias ExParamsSchema.Schema.Options
 
-  @typedoc "実行時に確定するフィールド値です。"
+  @typedoc "A field value resolved at runtime."
   @type value :: dynamic()
 
-  @typedoc "呼び出し側が任意に指定できるエラー理由です。"
+  @typedoc "An error reason that callers can choose freely."
   @type error_reason :: dynamic()
 
-  @typedoc "`parse_detailed/1`・`parse_detailed/2` が返す、フィールド単位の検証エラーです。"
+  @typedoc "A field-level validation error returned by `parse_detailed/1` and `parse_detailed/2`."
   @type validation_error :: ExParamsSchema.ValidationError.t()
 
-  @typedoc "`compile!/1` が返す、再利用可能なコンパイル済みスキーマです。"
+  @typedoc "A reusable compiled schema returned by `compile!/1`."
   @opaque compiled_schema :: %{required(:__struct__) => module(), optional(atom()) => term()}
 
   @type scalar_field_type ::
@@ -96,10 +96,10 @@ defmodule ExParamsSchema do
           {:ok, params :: parsed_params()} | {:error, errors :: [validation_error()]}
 
   @doc """
-  params モジュールでスキーマ DSL を利用できるようにします。
+  Enables the schema DSL in a params module.
 
-  `defschema/1`・`defschema/2` と `field/2`・`field/3` を import します。コンパイル時に
-  宣言を検証し、構造体、`t/0`、`parse/1` を生成します。
+  Imports `defschema/1`, `defschema/2`, `field/2`, and `field/3`. At compile time, it validates
+  declarations and generates a struct, `t/0`, and `parse/1`.
   """
   defmacro __using__(options) do
     schema_options = Options.normalize!(options, "use ExParamsSchema")
@@ -114,20 +114,21 @@ defmodule ExParamsSchema do
   end
 
   @doc """
-  オプション付きで 1 フィールドを宣言します。
+  Declares a field with optional settings.
 
       field :id, :integer,
         source: "input-id",
         minimum: 1,
         error: :invalid_id
 
-  `source:` は入力キーを指定します。`optional:`、`nullable:`、`default:`、`error:` は
-  フィールドに指定できます。型ごとの制約は README を参照してください。
+  `source:` specifies the input key. Fields also support `optional:`, `nullable:`, `default:`, and
+  `error:`. See the README for type-specific constraints.
 
-  ## コンパイル時エラー
+  ## Compile-time errors
 
-  未対応の型、未知または重複した option、不正な option 値、型に適用できない制約、重複した
-  フィールド名または入力キー、制約を満たさない `default:` は `ArgumentError` になります。
+  Unsupported types, unknown or duplicate options, invalid option values, constraints that do not
+  apply to the type, duplicate field names or input keys, and defaults that violate constraints
+  raise `ArgumentError`.
   """
   defmacro field(name, type, options \\ []) do
     quote bind_quoted: [name: name, type: type, options: options] do
@@ -136,29 +137,28 @@ defmodule ExParamsSchema do
   end
 
   @doc """
-  スキーマを宣言します。
+  Declares a schema.
 
       defschema do
         field :page, :integer, default: 1, minimum: 1
         field :query, :string, optional: true
       end
 
-  ブロック内で `field/2` または `field/3` によりフィールドを宣言します。同じフィールド名や同じ
-  入力キーを重複して宣言できません。`use ExParamsSchema, strict: true` を指定している場合は、
-  その strict mode を引き継ぎます。
+  Declare fields with `field/2` or `field/3` inside the block. Field names and input keys must be
+  unique. The schema inherits strict mode from `use ExParamsSchema, strict: true` when configured.
 
-  `strict:` を指定すると、`use ExParamsSchema` の設定をスキーマ単位で上書きできます。
+  `strict:` overrides the `use ExParamsSchema` setting for this schema.
 
       defschema strict: true do
         field :identifier, :integer
       end
 
-  `strict: true` の場合、未知の入力キーを拒否します。
+  With `strict: true`, unknown input keys are rejected.
 
-  ## コンパイル時エラー
+  ## Compile-time errors
 
-  `strict:` 以外の option、フィールド定義の不正な型・option・制約・default は
-  `ArgumentError` になります。
+  Options other than `strict:`, as well as invalid field types, options, constraints, or defaults,
+  raise `ArgumentError`.
   """
   defmacro defschema(options \\ [], do: block) do
     quote do
@@ -180,7 +180,7 @@ defmodule ExParamsSchema do
   end
 
   @doc """
-  スキーマ定義の map を実行用スキーマへコンパイルします。
+  Compiles a map-based schema definition into a runtime schema.
 
       iex> schema = ExParamsSchema.compile!(%{
       ...>   id: {:integer, source: "input-id", minimum: 1},
@@ -189,12 +189,12 @@ defmodule ExParamsSchema do
       iex> ExParamsSchema.parse(%{"input-id" => "1", "enabled" => "true"}, schema)
       {:ok, %{enabled: true, id: 1}}
 
-  生成したスキーマは `parse/2` へ渡します。これは `ExParamsSchema.Handler` で、構造体を
-  生成せず map を受け取りたい場合にも使用します。
+  Pass the resulting schema to `parse/2`. This is useful with `ExParamsSchema.Handler` or whenever
+  you want to parse maps without generating a struct.
 
-  ## 例外
+  ## Raises
 
-  定義が不正な場合は `ArgumentError` になります。キーは atom で指定してください。
+  Raises `ArgumentError` for an invalid definition. Keys must be atoms.
   """
   @spec compile!(schema_definition(), schema_options()) :: compiled_schema()
   def compile!(definition, options \\ []) when is_map(definition) and is_list(options) do
@@ -204,15 +204,15 @@ defmodule ExParamsSchema do
   end
 
   @doc """
-  コンパイル済みスキーマまたは map 形式のフィールド定義から JSON Schema Draft 7 を返します。
+  Returns JSON Schema Draft 7 from a compiled schema or a map-based field definition.
 
       iex> ExParamsSchema.json_schema(%{count: {:integer, minimum: 1}})
       ...> |> get_in(["properties", "count"])
       %{"minimum" => 1, "type" => "integer"}
 
-  map 形式の定義を渡す場合は `compile!/1` を必要としません。`strict: true` を指定する場合は
-  `json_schema(definition, strict: true)` を使います。
-  `defschema` を使うモジュールでは、生成される `json_schema/0` で引数なしに取得できます。
+  A map-based definition does not need to be passed to `compile!/1` first. To set `strict: true`, use
+  `json_schema(definition, strict: true)`. Modules using `defschema` can call the generated
+  `json_schema/0` with no arguments.
   """
   @spec json_schema(compiled_schema()) :: map()
   @spec json_schema(schema_definition()) :: map()
@@ -231,21 +231,20 @@ defmodule ExParamsSchema do
   end
 
   @doc """
-  コンパイル済みスキーマでパラメーターを検証・変換します。
+  Validates and casts parameters with a compiled schema.
 
       iex> schema = ExParamsSchema.compile!(%{count: {:integer, minimum: 1}})
       iex> ExParamsSchema.parse(%{"count" => "2"}, schema)
       {:ok, %{count: 2}}
 
-  成功時は変換済みの map、失敗時はフィールドの `error:`、または省略時の
-  `{:invalid_param, field_name}` を返します。map 以外の入力には `{:error, :invalid_params}` を
-  返します。
+  Returns the cast map on success. On failure, returns the field's `error:` value or
+  `{:invalid_param, field_name}` when omitted. Non-map input returns `{:error, :invalid_params}`.
   """
   @spec parse(map(), compiled_schema()) :: parse_result()
   defdelegate parse(params, schema), to: ExParamsSchema.Parser
 
   @doc """
-  コンパイル済みスキーマでパラメーターを検証・変換し、失敗時に全ての検証エラーを返します。
+  Validates and casts parameters with a compiled schema, returning every validation error on failure.
 
       iex> schema = ExParamsSchema.compile!(%{count: {:integer, minimum: 1}})
       iex> match?(
@@ -254,10 +253,10 @@ defmodule ExParamsSchema do
       ...> )
       true
 
-  各エラーの `path`、`keyword`、`reason` を UI のフィールドメッセージに利用できます。
-  `reason` は通常の `parse/2` と同じ `error:` の値です。型変換、必須値の読み取り、strict mode の
-  未知キーも、すべてのフィールド・入れ子の object・array 要素から収集します。型変換エラーの
-  `keyword` は `:cast`、未知キーの `keyword` は `:additional_properties` です。
+  Each error's `path`, `keyword`, and `reason` can be used for UI field messages. `reason` is the
+  same `error:` value returned by `parse/2`. Errors are collected from every field and nested object
+  or array item, including casting, missing required values, and unknown strict-mode keys. Cast
+  errors use `:cast` as their `keyword`; unknown keys use `:additional_properties`.
   """
   @spec parse_detailed(map(), compiled_schema()) :: detailed_parse_result()
   defdelegate parse_detailed(params, schema), to: ExParamsSchema.Parser

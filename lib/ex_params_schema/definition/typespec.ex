@@ -8,7 +8,7 @@ defmodule ExParamsSchema.Definition.Typespec do
   alias ExParamsSchema.Definition.Field
 
   @doc """
-  フィールド定義から構造体の型仕様 AST を返します。
+  Returns the struct typespec AST from field definitions.
 
       iex> fields = [
       ...>   %ExParamsSchema.Definition.Field{name: :count, type: :integer},

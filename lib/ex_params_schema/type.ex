@@ -38,22 +38,22 @@ defmodule ExParamsSchema.Type do
   @type json_value :: boolean() | number() | String.t() | nil | json_array() | json_object()
   @type cast_result :: {:ok, value :: term()} | {:error, detail :: term()}
 
-  @doc "外部入力を adapter の値へ変換します。変換不能な場合は `{:error, detail}` を返します。"
+  @doc "Casts external input to an adapter value, returning `{:error, detail}` when casting fails."
   @callback cast(input :: term(), options :: keyword()) :: cast_result()
 
-  @doc "adapter の値を JSON Schema 検証用の JSON 互換値へ変換します。"
+  @doc "Converts an adapter value into a JSON-compatible value for JSON Schema validation."
   @callback to_json(value :: term(), options :: keyword()) :: json_value()
 
-  @doc "adapter の値に対応する追加の JSON Schema を返します。"
+  @doc "Returns additional JSON Schema for an adapter value."
   @callback json_schema(options :: keyword()) :: map() | boolean()
 
-  @doc "変換済みの adapter 値に固有の制約を適用します。"
+  @doc "Applies constraints specific to a cast adapter value."
   @callback validate(value :: term(), options :: keyword()) :: :ok | {:error, detail :: term()}
 
-  @doc "フィールド宣言に渡された adapter 固有の option を検証します。"
+  @doc "Validates adapter-specific options provided in a field declaration."
   @callback validate_options(options :: keyword()) :: :ok | {:error, String.t()}
 
-  @doc "生成される params 構造体のフィールド型を表す AST を返します。"
+  @doc "Returns the AST representing the field type in the generated params struct."
   @callback typespec() :: Macro.t()
 
   @optional_callbacks validate: 2, validate_options: 1, typespec: 0

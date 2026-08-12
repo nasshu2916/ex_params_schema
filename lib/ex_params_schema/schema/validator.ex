@@ -9,7 +9,7 @@ defmodule ExParamsSchema.Schema.Validator do
   alias ExParamsSchema.{Schema, Schema.JsonPointer}
 
   @doc """
-  JSON 互換のデータを検証し、最初の宣言に対応するエラー理由へ正規化します。
+  Validates JSON-compatible data and normalizes the result to the first declared error reason.
 
       iex> schema = ExParamsSchema.compile!(%{count: {:integer, minimum: 1, error: :invalid_count}})
       iex> ExParamsSchema.Schema.Validator.validate(schema, %{"count" => 2})
@@ -29,7 +29,7 @@ defmodule ExParamsSchema.Schema.Validator do
   end
 
   @doc """
-  JSON 互換のデータを検証し、すべてのエラーをパス付きで返します。
+  Validates JSON-compatible data and returns all errors with their paths.
 
       iex> schema = ExParamsSchema.compile!(%{count: {:integer, minimum: 1, error: :invalid_count}})
       iex> {:error, [error]} = ExParamsSchema.Schema.Validator.validate_detailed(schema, %{"count" => 0})
