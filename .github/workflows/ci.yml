@@ -8,8 +8,38 @@ permissions:
   contents: read
 
 jobs:
-  quality:
-    name: Quality checks (Elixir ${{ matrix.elixir }}, OTP ${{ matrix.otp }})
+  changes:
+    name: Detect changed paths
+    runs-on: ubuntu-latest
+    outputs:
+      ex_params_schema: ${{ steps.filter.outputs.ex_params_schema }}
+      task_manager_dependency: ${{ steps.filter.outputs.task_manager_dependency }}
+      task_manager: ${{ steps.filter.outputs.task_manager }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            ex_params_schema:
+              - '**'
+              - '!**/*.md'
+              - '!sample/**'
+            task_manager_dependency:
+              - 'lib/**/*.ex'
+              - 'mix.exs'
+              - 'mix.lock'
+            task_manager:
+              - 'sample/task_manager/**'
+              - '!**/*.md'
+              - '.github/workflows/ci.yml'
+
+  ex-params-schema:
+    name: ExParamsSchema (Elixir ${{ matrix.elixir }}, OTP ${{ matrix.otp }})
+    needs: changes
+    if: needs.changes.outputs.ex_params_schema == 'true'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -47,3 +77,32 @@ jobs:
       - run: mix test --cover --warnings-as-errors
       - run: mix xref graph --format cycles
       - run: mix docs
+
+  task-manager:
+    name: TaskManager sample (Elixir 1.20.2, OTP 29.0.3)
+    needs: changes
+    if: needs.changes.outputs.task_manager_dependency == 'true' || needs.changes.outputs.task_manager == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: erlef/setup-beam@v1
+        with:
+          elixir-version: "1.20.2"
+          otp-version: "29.0.3"
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-task-manager-elixir-1.20.2-otp-29.0.3-mix-${{ hashFiles('mix.lock', 'sample/task_manager/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-task-manager-elixir-1.20.2-otp-29.0.3-mix-
+
+      - run: mix deps.get
+        working-directory: sample/task_manager
+      - run: mix test
+        working-directory: sample/task_manager
