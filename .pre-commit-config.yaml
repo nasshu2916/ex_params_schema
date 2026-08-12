@@ -1,4 +1,13 @@
 repos:
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.49.0
+    hooks:
+      - id: typos
+        args: []
+        always_run: true
+        pass_filenames: false
+        priority: 0
+
   - repo: local
     hooks:
       - id: mix-format

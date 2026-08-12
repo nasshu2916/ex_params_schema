@@ -6,7 +6,7 @@ This page describes the local development workflow for `ExParamsSchema`.
 
 ## Toolchain
 
-The project pins Erlang, Elixir, and [prek](https://prek.j178.dev/) in `mise.toml`. Install the toolchain after cloning:
+The project pins Erlang, Elixir, [prek](https://prek.j178.dev/), and [typos](https://github.com/crate-ci/typos) in `mise.toml`. Install the toolchain after cloning:
 
 ```shell
 mise install
@@ -22,9 +22,10 @@ Keeping these steps separate makes it clear whether a failure is in the toolchai
 
 ## Git hooks
 
-`prek` runs the following checks before a commit containing Elixir files:
+`prek` runs the following checks before a commit:
 
 - `mix format --check-formatted`
+- `typos`
 - `mix credo --strict`
 - `mix compile --warnings-as-errors`
 - `mix dialyzer`

@@ -48,6 +48,7 @@ defmodule ExParamsSchema.HandlerTest do
                  fn ->
                    Code.compile_string("""
                    defmodule #{inspect(unknown_option_module)} do
+                     # typos:ignore-next-line
                      use ExParamsSchema.Handler, on_erorr: :handle_params_error
                    end
                    """)

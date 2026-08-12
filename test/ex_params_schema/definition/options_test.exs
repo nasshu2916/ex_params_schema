@@ -6,7 +6,9 @@ defmodule ExParamsSchema.Definition.OptionsTest do
   test "既知の keyword だけを許可する" do
     assert Options.validate!(minimum: 1) == :ok
 
+    # typos:ignore-next-line
     assert_raise ArgumentError, ~r/unknown schema options: \[:minimun\]/, fn ->
+      # typos:ignore-next-line
       Options.validate!(minimun: 1)
     end
   end

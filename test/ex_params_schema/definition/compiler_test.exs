@@ -36,7 +36,9 @@ defmodule ExParamsSchema.Definition.CompilerTest do
                count: {:integer, source: "input-count", minimum: 1}
              })
 
+    # typos:ignore-next-line
     assert_raise ArgumentError, ~r/unknown schema options: \[:minimun\]/, fn ->
+      # typos:ignore-next-line
       ExParamsSchema.Definition.compile!(%{count: {:integer, minimun: 1}})
     end
 

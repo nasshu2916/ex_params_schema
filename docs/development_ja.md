@@ -6,7 +6,7 @@
 
 ## Toolchain
 
-このプロジェクトでは、Erlang、Elixir、[prek](https://prek.j178.dev/) のバージョンを `mise.toml` で固定しています。clone 後にツールチェーンをインストールします。
+このプロジェクトでは、Erlang、Elixir、[prek](https://prek.j178.dev/)、[typos](https://github.com/crate-ci/typos) のバージョンを `mise.toml` で固定しています。clone 後にツールチェーンをインストールします。
 
 ```shell
 mise install
@@ -22,9 +22,10 @@ mix deps.get
 
 ## Git フック
 
-`prek` は Elixir ファイルを含むコミットの前に、次のチェックを実行します。
+`prek` はコミット前に、次のチェックを実行します。
 
 - `mix format --check-formatted`
+- `typos`
 - `mix credo --strict`
 - `mix compile --warnings-as-errors`
 - `mix dialyzer`

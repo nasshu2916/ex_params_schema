@@ -33,7 +33,9 @@ defmodule ExParamsSchema.Definition.NormalizerTest do
   end
 
   test "標準型とカスタム型の不正な option を拒否する" do
+    # typos:ignore-next-line
     assert_raise ArgumentError, ~r/unknown schema options: \[:minimun\]/, fn ->
+      # typos:ignore-next-line
       Normalizer.normalize!({:integer, minimun: 1})
     end
 

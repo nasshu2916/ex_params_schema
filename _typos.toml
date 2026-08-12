@@ -1,0 +1,5 @@
+[default]
+# 意図的な誤字を含む次の1行は、注釈で明示的に除外する。
+extend-ignore-re = [
+  '(?m)# typos:ignore-next-line\n.*',
+]

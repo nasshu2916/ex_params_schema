@@ -2,6 +2,7 @@
 elixir = "1.20.2-otp-29"
 erlang = "29.0.3"
 prek = "0.4.13"
+typos = "1.49.0"
 
 [tasks.dev]
 description = "Start the development iex shell with history enabled"
@@ -10,8 +11,8 @@ run = [
 ]
 
 [tasks.ci]
-description = "Format, lint, type-check, and run coverage tests"
-depends = ["ci:format", "ci:credo", "ci:dialyzer", "ci:test", "ci:docs"]
+description = "Format, spell-check, lint, type-check, and run coverage tests"
+depends = ["ci:format", "ci:typos", "ci:credo", "ci:dialyzer", "ci:test", "ci:docs"]
 
 [tasks."ci:format"]
 hide = true
@@ -20,6 +21,10 @@ run = "mix format"
 [tasks."ci:compile"]
 hide = true
 run = "mix compile --warnings-as-errors"
+
+[tasks."ci:typos"]
+hide = true
+run = "typos"
 
 [tasks."ci:credo"]
 hide = true

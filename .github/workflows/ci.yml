@@ -8,6 +8,14 @@ permissions:
   contents: read
 
 jobs:
+  typos:
+    name: Spelling
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: crate-ci/typos@v1.49.0
+
   changes:
     name: Detect changed paths
     runs-on: ubuntu-latest
