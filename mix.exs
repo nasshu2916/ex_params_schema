@@ -49,10 +49,12 @@ defmodule ExParamsSchema.MixProject do
       extras: [
         {"README.md", title: "ExParamsSchema", filename: "readme"},
         "CHANGELOG.md",
+        "docs/development.md",
         "docs/dsl.md",
         "docs/json-schema-usage.md",
         "docs/parsing-semantics.md",
         {"README_ja.md", title: "ExParamsSchema (日本語)", filename: "readme_ja"},
+        {"docs/development_ja.md", title: "開発ガイド", filename: "development_ja"},
         {"docs/dsl_ja.md", title: "DSL リファレンス", filename: "dsl_ja"},
         {"docs/json-schema-usage_ja.md", title: "`json_schema:` の使い方", filename: "json-schema-usage_ja"},
         {"docs/parsing-semantics_ja.md", title: "パースの仕様", filename: "parsing-semantics_ja"}

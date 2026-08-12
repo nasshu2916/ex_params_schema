@@ -166,3 +166,4 @@ iex> ExParamsSchema.parse(%{"page" => "2"}, schema)
 - [DSL reference](docs/dsl.md): types, constraints, nested maps and lists, and custom types
 - [Parsing semantics](docs/parsing-semantics.md): input keys, absent values, strict mode, and errors
 - [Using `json_schema:`](docs/json-schema-usage.md): JSON Schema constraints that cannot be expressed with the DSL
+- [Development guide](docs/development.md): toolchain setup, Git hooks, and local CI checks

@@ -166,3 +166,4 @@ iex> ExParamsSchema.parse(%{"page" => "2"}, schema)
 - [DSL リファレンス](docs/dsl_ja.md): 型、制約、nested map・list、独自型
 - [パースの仕様](docs/parsing-semantics_ja.md): 入力キー、未指定値、strict mode、エラーの返し方
 - [`json_schema:` の利用](docs/json-schema-usage_ja.md): DSL では表現できない JSON Schema 制約
+- [開発ガイド](docs/development_ja.md): ツールチェーンの準備、Git フック、ローカル CI チェック
