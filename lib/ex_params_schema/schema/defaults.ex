@@ -10,6 +10,12 @@ defmodule ExParamsSchema.Schema.Defaults do
   alias ExParamsSchema.Schema.Projector
 
   defmodule Context do
+    @moduledoc """
+    Carries the resolved JSON Schema and traversal state while normalizing defaults.
+
+    This internal context tracks nested field paths and inherited error reasons.
+    """
+
     @enforce_keys [:resolved]
     defstruct [
       :resolved,
