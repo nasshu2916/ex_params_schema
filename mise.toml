@@ -1,6 +1,6 @@
 [tools]
 elixir = "1.20.2-otp-29"
-erlang = "29.0.3"
+erlang = "29.0.5"
 prek = "0.4.13"
 typos = "1.49.0"
 
