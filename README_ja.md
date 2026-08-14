@@ -173,6 +173,17 @@ mix ex_params_schema.export_json_schema MyAppWeb.Params.Update --output priv/sch
 最初のコマンドは整形済み JSON を標準出力します。`--output` を指定すると、必要な親ディレクトリを作成して
 指定したファイルへ schema を書き出します。
 
+## JSON Schema の読み込み
+
+JSON Schema Draft 7 の object schema から `defschema` モジュールを生成できます。
+
+```shell
+mix ex_params_schema.generate_schema priv/schemas/update.json MyAppWeb.Params.Update
+mix ex_params_schema.generate_schema priv/schemas/update.json MyAppWeb.Params.Update --output lib/my_app_web/params/update.ex
+```
+
+object field、配列、必須 field、nullable、`additionalProperties: false` は DSL として復元します。その他の JSON Schema 制約は `json_schema:` に保持します。root schema には `properties` map を持つ object を指定してください。任意の追加 property を許可する object は検証用に生成できますが、追加の入力キーは生成後の params 構造体には保持されません。
+
 ## ドキュメント
 
 - [DSL リファレンス](docs/dsl_ja.md): 型、制約、nested map・list、独自型

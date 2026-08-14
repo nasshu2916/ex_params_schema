@@ -173,6 +173,21 @@ mix ex_params_schema.export_json_schema MyAppWeb.Params.Update --output priv/sch
 The first command writes formatted JSON to standard output. `--output` creates parent directories as
 needed and writes the schema to the given file.
 
+## Import JSON Schema
+
+Generate a `defschema` module from a JSON Schema Draft 7 object schema:
+
+```shell
+mix ex_params_schema.generate_schema priv/schemas/update.json MyAppWeb.Params.Update
+mix ex_params_schema.generate_schema priv/schemas/update.json MyAppWeb.Params.Update --output lib/my_app_web/params/update.ex
+```
+
+Object fields, arrays, required fields, nullable values, and `additionalProperties: false` are
+represented with the DSL. Other JSON Schema constraints are preserved through `json_schema:`.
+The root schema must be an object with a `properties` map. Object schemas that allow arbitrary
+additional properties are generated for validation, but their extra input keys are not retained by
+the resulting params struct.
+
 ## Documentation
 
 - [DSL reference](docs/dsl.md): types, constraints, nested maps and lists, and custom types

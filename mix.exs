@@ -41,7 +41,7 @@ defmodule ExParamsSchema.MixProject do
       name: "ex_params_schema",
       licenses: ["MIT"],
       links: %{"GitHub" => @source_url},
-      files: ["lib", "mix.exs", "README.md", "README_ja.md", "CHANGELOG.md", "LICENSE", "docs"]
+      files: ["lib", "mix.exs", ".formatter.exs", "README.md", "README_ja.md", "CHANGELOG.md", "LICENSE", "docs"]
     ]
   end
 
